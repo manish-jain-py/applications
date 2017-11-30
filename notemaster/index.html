@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://davidtkatz.com/public_css/noteMaster.css">
+    <title>Notemaster</title>
+  </head>
+  <body>
+    <div id="app">
+      {{title}}
+      <p>{{ $t('message.hello', ['hello', 'world', 'Bye']) }}</p>
+      <div class="form">
+        <div class="form-group">
+          <div class="form-group">
+            <label>Note Title</label>
+            <input class="form-control" type="text" v-model="note.title" />
+          </div>
+          <div class="form-group">
+            <label>Note Text</label>
+            <textarea class="form-control" v-model="note.text"></textarea>
+          </div>
+          <button class="btn btn-primary" @click="addNote">Save</button>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-4 note" v-for="(note, index) in notes">
+          <div class="card">
+            <div class="card-block">
+              <button class="close" @click="removeNote(index)">&times;</button>
+              <h4 class="card-title">{{note.title}}</h4>
+              <h6 class="card-subtitle mb-2 text-muted">{{note.date}}</h6>
+              <p class="card-text">{{note.text}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      const messages = {
+        en: {
+          message: {
+            hello: '{0} world {2} {1}'
+          }
+        },
+        ja: {
+          message: {
+            hello: 'こんにちは、世界'
+          }
+        }
+      }
+
+      // Create VueI18n instance with options
+      const i18n = new VueI18n({
+        locale: 'en', // set locale
+        messages, // set locale messages
+      })
+
+      var app = new Vue({
+        el: "#app",
+        i18n,
+        data: {
+          title: "SPA app Notemaster",
+          note: {
+            title: '',
+            text: ''
+          },
+          notes: []
+        },
+        methods: {
+          addNote(){
+            this.notes.push(
+              {
+                title: this.note.title,
+                text: this.note.text,
+                date: new Date(Date.now()).toLocaleString()
+              }
+            )
+          },
+          removeNote(index){
+            this.notes.splice(index, 1)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
